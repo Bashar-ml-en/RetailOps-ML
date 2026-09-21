@@ -112,6 +112,7 @@ The API's current inspectable routes are:
 - [Retail connector contract](docs/data_contract.md)
 - [Lifecycle governance](docs/lifecycle_governance.md)
 - [Specialist agent contracts](docs/agent_prompts.md)
+- [Autonomous Planner Copilot product charter](docs/autonomous_planner_product_charter.md)
 - [Autonomous Planner Copilot execution roadmap](docs/autonomous_agent_execution_roadmap.md)
 - [Architecture](docs/architecture.md) and [system blueprint](docs/system_blueprint.md)
 - [FreshRetailNet benchmark contract](docs/freshretailnet_benchmark_contract.md)

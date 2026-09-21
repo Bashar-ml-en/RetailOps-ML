@@ -1,8 +1,9 @@
 # RetailOps Autonomous Planner Copilot — Execution Roadmap and Prompt Pack
 
-**Status:** Proposed architecture and implementation plan. This document does
-not activate a connector, worker, model, customer-data path, or operational
-action.
+**Status:** P0 product/autonomy charter approved for public-benchmark
+development. This document does not activate a connector, worker, model,
+customer-data path, or operational action. See the
+[approved product charter](autonomous_planner_product_charter.md).
 
 ## Product decision
 
@@ -467,8 +468,9 @@ security or evidence failure into a passing score.
 
 ## First approved execution order
 
-Do not begin P1 implementation until P0 is approved. The first concrete
-work-item after approval is:
+P0 is recorded in the [approved product charter](autonomous_planner_product_charter.md).
+Do not begin P1 runtime implementation until an explicit P1 architecture
+decision is accepted. The P0 evidence envelope was:
 
 ```yaml
 work_item_id: "P0-autonomous-planner-product-charter-v1"
@@ -497,5 +499,5 @@ stop_conditions:
   - "attempt to use public data for a retailer claim"
 ```
 
-Only after that charter is accepted may P1 fan out into independent runtime
-workstreams.
+Only after the P1 architecture decision is accepted may P1 fan out into
+independent runtime workstreams.
