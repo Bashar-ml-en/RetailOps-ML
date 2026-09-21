@@ -1,0 +1,50 @@
+name: Verify RetailOps ML
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - name: Install pinned dependencies
+        run: python -m pip install --requirement backend/requirements.txt
+      - name: Run the full backend suite
+        working-directory: backend
+        run: python -m pytest
+
+  frontend:
+    name: Frontend production build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install locked dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+      - name: Build production bundle
+        working-directory: frontend
+        run: pnpm build

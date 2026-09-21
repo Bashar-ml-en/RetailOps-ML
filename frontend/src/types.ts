@@ -2,6 +2,7 @@ export type BlueprintState =
   | "CONTRACT_DEFINED"
   | "DESIGNED"
   | "ENFORCED_BY_POLICY"
+  | "IMPLEMENTED"
   | "PARTIAL"
   | "PLANNED";
 

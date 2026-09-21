@@ -1,6 +1,9 @@
 # Authorised connector snapshots and derived artifacts
+data/raw/*
+!data/raw/.gitkeep
 data/snapshots/
 data/artifacts/
+data/audit/
 
 # Python
 __pycache__/
@@ -16,3 +19,6 @@ frontend/dist/
 # Local settings and databases
 .env
 *.db
+
+# Local migration redirect; the active RetailOps lifecycle skill is versioned.
+.codex/skills/pricepulse-spectrum/

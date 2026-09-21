@@ -2,7 +2,8 @@
 
 ## Purpose
 
-This contract turns authorised retailer exports or APIs into a versioned,
+This contract turns authorised retailer exports or APIs, or a visibly labelled
+public benchmark adapter, into a versioned,
 comparable input for demand forecasting and inventory-risk review. Missing
 evidence produces a limited use case or INCONCLUSIVE, never invented values.
 
@@ -36,6 +37,21 @@ policy, exclusions, and field-level quality results.
 | Supply and lead time | No replenishment recommendation without declared evidence. |
 | Timestamp and quantity parsing | Reject invalid records rather than coercing values. |
 | Snapshot immutability | REJECT if model input cannot be reproduced. |
+
+## Public benchmark boundary
+
+An explicitly labelled public benchmark may use a separate mapping contract
+when its published schema does not represent retailer order lines or current
+inventory. Its snapshot must identify `source_type: PUBLIC_BENCHMARK`, source
+URL, licence, attribution, mapping version, hash, and a fixed non-retailer
+namespace. It must never be called an authorised tenant snapshot.
+
+FreshRetailNet-50K is the implemented example. Its normalised daily sales and
+stockout-status fields permit only limited benchmark forecast evaluation.
+Physical on-hand, inbound-supply, lead-time, customer authorization, and
+retailer timezone evidence are absent, so inventory risk, replenishment, and
+production scoring remain blocked. See the
+[FreshRetailNet public benchmark contract](freshretailnet_benchmark_contract.md).
 
 ## Connector-agent output
 

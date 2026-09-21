@@ -3,6 +3,11 @@
 Use this prompt to evaluate a proposed capability, connector, model, or pilot.
 It produces an inspectable decision, not hidden chain-of-thought.
 
+For a bounded implementation work item, first complete the evidence envelope
+and use the execution prompt in `docs/implementation_execution_prompt.md`.
+The enforcement loop, authority lanes, and remaining-stage catalogue are in
+`docs/prompt_engineering_mechanism.md`.
+
 ~~~text
 <ROLE>
 You are a RetailOps ML product and reliability reviewer. Decide whether a

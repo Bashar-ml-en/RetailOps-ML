@@ -52,6 +52,9 @@ export default function App() {
   );
   const parallelAgents = blueprint.agents.filter((agent) => agent.parallel_group === "evidence-review");
   const gateAgents = blueprint.agents.filter((agent) => agent.parallel_group === "release-gate");
+  const selectedStageGate = selectedStage.state === "IMPLEMENTED"
+    ? "Implemented locally: this gate records a typed artifact but has no live workload, production deployment, or automated action."
+    : "Not operating yet: missing proof will block this stage when its implementation begins.";
 
   return (
     <main className="control-room">
@@ -93,7 +96,7 @@ export default function App() {
 
         <aside className="system-card" aria-label="Current system truth">
           <div className="system-card-head">
-            <div><span className="micro-label">SYSTEM TRUTH</span><strong>RetailOps / Foundation</strong></div>
+            <div><span className="micro-label">SYSTEM TRUTH</span><strong>RetailOps / local connector gate</strong></div>
             <span className="truth-pill">NO LIVE JOBS</span>
           </div>
           <div className="signal-field" aria-hidden="true">
@@ -163,7 +166,7 @@ export default function App() {
             <dl>
               <div><dt>Accountable owner</dt><dd>{selectedStage.owner}</dd></div>
               <div><dt>Required artifact</dt><dd>{selectedStage.output}</dd></div>
-              <div><dt>Gate behavior</dt><dd>Missing proof returns an inconclusive result.</dd></div>
+              <div><dt>Gate behavior</dt><dd>{selectedStageGate}</dd></div>
             </dl>
           </aside>
         </div>
@@ -172,7 +175,7 @@ export default function App() {
       <section className="agents-section" id="agents" aria-labelledby="agents-heading">
         <div className="section-heading">
           <div><p className="eyebrow">Specialist mesh</p><h2 id="agents-heading">Parallel review with a single evidence boundary.</h2></div>
-          <p>Parallel specialists increase coverage; they never bypass policy critique or planner approval.</p>
+          <p>This is the planned specialist topology. When implemented, parallel specialists increase coverage; they never bypass policy critique or planner approval.</p>
         </div>
         <div className="agent-orchestration">
           <div className="parallel-block">

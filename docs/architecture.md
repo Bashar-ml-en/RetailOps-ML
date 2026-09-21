@@ -1,5 +1,10 @@
 # RetailOps ML Architecture
 
+This is the target production architecture. Current local code implements the
+CSV/data-contract gate, a chronology-safe baseline evaluator, and a
+fixed-candidate local registry gate; it has no live retailer source, authorised
+candidate evaluation, parallel worker, deployed model, or production score.
+
 ~~~text
 Authorised CSV / commerce / inventory connectors
                     |
@@ -37,7 +42,7 @@ Authorised CSV / commerce / inventory connectors
 | ML lifecycle | Build chronology-safe features, evaluate baselines and candidates, register champions, and monitor production performance. |
 | Specialists | Interpret compact typed artifacts and stop unsafe cases. |
 | API and storage | Expose runs, events, artifacts, review cases, and immutable audit records. |
-| Dashboard | Show live gate status, evidence, model version, limitations, review queue, and outcome measurements. |
+| Dashboard | In production, show live gate status, evidence, model version, limitations, review queue, and outcome measurements. The current dashboard is an explicitly labelled blueprint. |
 
 ## Security and deployment boundary
 

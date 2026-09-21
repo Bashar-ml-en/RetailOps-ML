@@ -1,0 +1,18 @@
+/* State colors communicate delivery truth, not activity. */
+.state-enforced_by_policy {
+  color: #79dbbc;
+}
+
+.state-implemented {
+  color: #a6b8e9;
+}
+
+.state-contract_defined,
+.state-designed {
+  color: #8eaeff;
+}
+
+.state-partial,
+.state-planned {
+  color: #f0b57d;
+}
