@@ -1,131 +1,130 @@
 # RetailOps ML
 
-RetailOps ML is a global, evidence-first decision-support foundation for
-retailers and distributors. It helps human planners identify demand and
-inventory cases that deserve review before a stockout or excess-stock decision
-is made.
+[![Verify RetailOps ML](https://github.com/Bashar-ml-en/RetailOps-ML/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/Bashar-ml-en/RetailOps-ML/actions/workflows/verify.yml)
 
-## The product answers four questions
+RetailOps ML is an evidence-first, reusable foundation for retail demand,
+inventory, and replenishment decision support. It helps planners decide which
+SKU-location cases deserve review; it never purchases stock, moves inventory,
+changes prices, or contacts suppliers.
 
-| Question | RetailOps ML answer |
-| --- | --- |
-| Why is this worth solving? | Retail teams need a reliable way to prioritise stockout and excess-inventory risk from fragmented operational data. |
-| What is it designed to do? | After its lifecycle gates are built and validated, it will produce evidence-backed demand forecasts, inventory-risk cases, and reviewable action drafts per compatible SKU and location. |
-| What works today? | A disabled server-side CSV gate validates an authorised export, stores an immutable local-pilot snapshot, and records a typed Data Contract decision. It does not forecast or make an operational recommendation. |
-| How will it work? | Authorised connector data is validated and versioned first; then chronological forecasting, deterministic specialist review, and final human approval are added as separately tested gates. |
-| What impact can it make? | A future pilot will measure forecast error, qualified cases found, planner response time, stockout days, and excess inventory. It does not promise outcomes before measurement. |
+## What this repository is
 
-## Current status
+This is a governed **local and pre-pilot foundation**, not a production retail
+service. Its components are deliberately usable in three distinct modes:
 
-This is a clean RetailOps ML foundation. It contains the product constitution,
-retail connector contract, ML lifecycle governance, agent contracts, reusable
-skill, reframed product-decision prompt, and a minimal local scaffold. It also
-includes a server-side CSV snapshot and validation gate that is disabled by
-default until an authenticated authorised deployment exists. A local,
-chronology-safe naïve baseline evaluator is also available, but it has no
-authorised customer-data run or reported model metric.
+| Mode | Intended use | Permitted claim |
+| --- | --- | --- |
+| Labelled fixtures | Development and safety tests | Contract behaviour only |
+| Public benchmark | Reproducible forecast evaluation | Benchmark results only |
+| Authorised pilot | A retailer's approved, read-only data scope | Pilot evidence only |
 
-P0 production-foundation preparation is also implemented as a non-secret,
-fixture-only contract. It records the required identity, secret-store,
-relational audit-store, immutable object-store, worker, scheduler, and RBAC
-references; validates fixture tenant-role scope; and refuses all local worker
-or scheduler execution. A local SQLite adapter records only tenant-partitioned
-fixture audit metadata and blocked job/schedule records. It provisions no
-external service, exposes no customer API, and keeps customer ingestion
-hard-disabled.
+Customer ingestion remains hard-disabled until an authenticated, authorised
+deployment exists. Public data (including FreshRetailNet-50K) is never treated
+as customer data and cannot unlock operational recommendations.
 
-It also includes a fixture-backed, fixed-candidate lifecycle gate: a seven-day
-trailing-observed-mean candidate can be compared with the recorded naïve
-baseline on chronological validation only, with the final test period locked.
-The local registry artifact records configuration, metrics, selection, and a
-rollback baseline; a tie or regression retains the baseline. This is not an
-authorised customer evaluation, trained production model, deployed service, or
-operational action.
+## What works today
 
-The recorded FreshRetailNet local model has one separate immutable final-test
-report. It evaluates the validation-selected retained naïve baseline over the
-locked public split without changing the registry selection. Its metrics are
-labelled benchmark-only and cannot support customer, inventory, replenishment,
-or business-impact claims.
+- A modular FastAPI service with stable system and connector-run routes.
+- An opt-in, server-side CSV connector gate that validates the authorisation
+  boundary before it accepts a snapshot; it is disabled by default.
+- Chronology-safe naïve-baseline and fixed-candidate lifecycle evaluation with
+  a locked final-test report for the public benchmark.
+- Deterministic Data Contract, Forecast Evaluation, Inventory Risk, Impact
+  Ranking, Policy Critic, and Action Drafting contracts for labelled fixtures.
+- Failure-closed review flows: incomplete identity, units, stock, inbound, or
+  lead-time evidence yields an inconclusive decision rather than an action.
+- A React control-room surface, versioned documentation, fixture tests, and
+  CI that runs backend tests and the frontend production build.
 
-Stage 5 deterministic specialist contracts are also available for labelled
-fixtures: Inventory Risk, Impact Ranking, Policy Critic, and Action Drafting.
-They fail closed on missing evidence, prohibit external operations, and can
-create only a non-executable human-review draft. A synchronous fixture-only
-workflow records actual specialist and terminal events before a local queue
-persists approve, decline, and defer audit events. There is not yet a worker,
-authenticated reviewer workflow, or customer action path.
+## Safety boundary
 
-FreshRetailNet-50K can now enter the same local baseline and fixed-candidate
-gates through an explicit, locally supplied **public benchmark** adapter. A
-pinned, recorded local benchmark run exists, but its snapshots and metrics are
-limited to benchmark forecast evaluation; the source is not bundled or
-downloaded by the app, and it cannot unlock customer ingestion, inventory-risk
-scoring, replenishment drafts, production scoring, or retailer-impact claims.
+RetailOps ML is decision support for human planners. Forecasts and risk scores
+are estimates, not guarantees. A draft is non-executable and requires a human
+reviewer. The Policy Critic has veto authority and may return only `PASS`,
+`PASS_WITH_LIMITATIONS`, `REJECT`, or `INCONCLUSIVE`.
 
-RetailOps intentionally has no live merchant connector, demand forecast,
-inventory score, parallel-agent workload, or autonomous purchasing capability.
-The CSV and model-lifecycle gates record local fixture behavior only; they are
-not live customer integrations or production models. Those are upcoming
-validated stages, not mocked features.
+Do not put credentials, customer exports, or customer identifiers in this
+repository, issues, pull requests, or public benchmark artifacts.
 
-## Documentation
+## Quick start
 
-- [Constitution](docs/constitution.md)
-- [Retail connector contract](docs/data_contract.md)
-- [Agent contracts](docs/agent_prompts.md)
-- [ML lifecycle governance](docs/lifecycle_governance.md)
-- [Demand-baseline contract](docs/baseline_contract.md)
-- [Fixed-candidate lifecycle contract](docs/model_lifecycle_contract.md)
-- [Authorised pilot charter](docs/authorised_pilot_charter.md)
-- [Read-only CSV authorisation request pack](docs/authorisation_request_pack.md)
-- [Pilot-readiness contract](docs/pilot_readiness_contract.md)
-- [Production-foundation contract](docs/production_foundation_contract.md)
-- [Fixture tenant-audit contract](docs/fixture_tenant_audit_contract.md)
-- [FreshRetailNet public benchmark contract](docs/freshretailnet_benchmark_contract.md)
-- [FreshRetailNet final-test benchmark report](docs/freshretailnet_final_test_report.md)
-- [Architecture](docs/architecture.md)
-- [Inspectable system blueprint](docs/system_blueprint.md)
-- [Experience system](docs/experience_system.md)
-- [Production roadmap](docs/production_roadmap.md)
-- [Build track](docs/build_track.md)
-- [Product-decision prompt](docs/prompting_standard.md)
-- [Prompt-engineering mechanism](docs/prompt_engineering_mechanism.md)
-- [Implementation execution prompt](docs/implementation_execution_prompt.md)
+Prerequisites: Python 3.12+, Node.js 22.12–24.x, and pnpm 11.19.0.
 
-## Local development
-
-Backend, from backend/:
-
-~~~powershell
+```powershell
+git clone https://github.com/Bashar-ml-en/RetailOps-ML.git
+Set-Location RetailOps-ML
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-pytest
-uvicorn app.main:app --reload --port 8000
-~~~
+pip install -r backend/requirements.txt
+pnpm --dir frontend install --frozen-lockfile
+.\scripts\verify.ps1
+```
 
-Frontend, from frontend/:
+Run the API and UI in separate terminals:
 
-~~~powershell
-pnpm install
-pnpm dev
-~~~
+```powershell
+python -m uvicorn app.main:app --app-dir backend --reload --port 8000
+pnpm --dir frontend dev
+```
 
-Open http://localhost:5173 after starting the API at http://localhost:8000.
+Open `http://localhost:5173`. The local UI can render its explicitly labelled
+blueprint without connecting to an API. For a local API, use
+`http://localhost:8000`.
 
-## Vercel deployment
+On macOS or Linux, use `./scripts/verify.sh`. Override the Python executable
+with `PYTHON_BIN=/path/to/python ./scripts/verify.sh` when needed.
 
-The checked-in Vercel configuration builds the static React control room from
-`frontend/` and serves `frontend/dist`. It explicitly installs development
-build tooling, so a `NODE_ENV=production` project variable cannot omit Vite or
-TypeScript during Vercel's build. The public control room uses its embedded,
-explicitly labelled architecture blueprint unless an HTTPS API is configured
-with `VITE_API_URL`.
+## Repository map
 
-A Vercel deployment makes the inspectable product surface available; it does
-not by itself activate retail connectors, model training, agent workloads, or
-operational decisions. Before connecting a production API, deploy it separately
-with authenticated connector credentials held only on the server, explicit
-CORS for the Vercel domain, durable audit storage, and the lifecycle gates in
-`docs/system_blueprint.md`.
+```text
+backend/       FastAPI composition, governed workflow components, and tests
+frontend/      React/Vite control-room interface
+docs/          Product constitution, contracts, lifecycle, and evidence docs
+scripts/       Cross-platform verification entry points
+.github/       CI, Dependabot, and contribution templates
+data/          Ignored local snapshots, benchmark material, and audit outputs
+```
+
+The API's current inspectable routes are:
+
+- `GET /health`
+- `GET /product/brief`
+- `GET /system/blueprint`
+- `POST /v1/connector-runs/csv` (hard-disabled without an authorised runtime)
+- `GET /v1/runs/{run_id}`
+
+## Reuse responsibly
+
+1. Start with fixtures or the documented public benchmark; label every output
+   with its source mode.
+2. Read the [reuse guide](docs/reuse-guide.md) and the governing contracts
+   before changing a connector, model, agent, policy, or API contract.
+3. Introduce an authorised connector only with a defined tenant, approved
+   source and transfer path, read-only credentials, retention rule, and
+   fixture-backed boundary tests.
+4. Evaluate models chronologically against a declared baseline and retain a
+   rollback-ready champion. Never promote against the locked final test.
+5. Keep operational actions human-approved and non-executable from this code.
+
+## Key documentation
+
+- [Product constitution](docs/constitution.md)
+- [Retail connector contract](docs/data_contract.md)
+- [Lifecycle governance](docs/lifecycle_governance.md)
+- [Specialist agent contracts](docs/agent_prompts.md)
+- [Architecture](docs/architecture.md) and [system blueprint](docs/system_blueprint.md)
+- [FreshRetailNet benchmark contract](docs/freshretailnet_benchmark_contract.md)
+  and [locked final-test report](docs/freshretailnet_final_test_report.md)
+- [Authorised pilot charter](docs/authorised_pilot_charter.md) and
+  [authorisation request pack](docs/authorisation_request_pack.md)
+- [Build track](docs/build_track.md) and [production roadmap](docs/production_roadmap.md)
+
+## Contributing and security
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution workflow and
+[SECURITY.md](SECURITY.md) for responsible disclosure guidance.
+
+## Licence
+
+No open-source licence is currently declared. The repository owner must select
+and add a licence before third parties can legally reuse or distribute it.

@@ -5,7 +5,7 @@ from io import BytesIO
 from fastapi import UploadFile
 from fastapi.testclient import TestClient
 
-import app.main as main_module
+from app.api.routes import connector_runs
 from app.main import app
 from app.services.data import CsvInputError, csv_bundle_from_uploads
 
@@ -37,12 +37,12 @@ def test_csv_connector_endpoint_is_disabled_without_authorised_server_configurat
 
 def test_csv_connector_remains_disabled_when_only_the_legacy_enable_flag_is_true(monkeypatch) -> None:
     monkeypatch.setattr(
-        main_module,
+        connector_runs,
         "settings",
-        replace(main_module.settings, csv_ingestion_enabled=True),
+        replace(connector_runs.settings, csv_ingestion_enabled=True),
     )
 
-    response = TestClient(main_module.app).post(
+    response = TestClient(app).post(
         "/v1/connector-runs/csv",
         data={"tenant_id": "tenant-a", "authorization_reference": "pilot-record"},
         files={
@@ -55,6 +55,18 @@ def test_csv_connector_remains_disabled_when_only_the_legacy_enable_flag_is_true
 
     assert response.status_code == 503
     assert "hard-disabled" in response.json()["detail"]
+
+
+def test_application_composes_only_the_documented_public_routes() -> None:
+    documented_paths = {
+        "/health",
+        "/product/brief",
+        "/system/blueprint",
+        "/v1/connector-runs/csv",
+        "/v1/runs/{run_id}",
+    }
+
+    assert documented_paths.issubset(app.openapi()["paths"])
 
 
 def test_csv_upload_reader_rejects_oversized_input_without_accepting_a_bundle() -> None:

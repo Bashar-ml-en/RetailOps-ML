@@ -9,6 +9,7 @@ data/audit/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.pytest-tmp/
 .venv/
 backend/.packages/
 
@@ -16,6 +17,7 @@ backend/.packages/
 frontend/node_modules/
 frontend/dist/
 /.pnpm-store/
+.verification-venv/
 
 # Local settings and databases
 .env
