@@ -1,4 +1,4 @@
-import type { PublicBenchmarkRun, RuntimeEvent, SystemBlueprint } from "./types";
+import type { PublicBenchmarkRun, PublicPlannerBrief, RuntimeEvent, SystemBlueprint } from "./types";
 
 const configuredApiBaseUrl = import.meta.env.VITE_API_URL?.replace(/\/+$/, "");
 const apiBaseUrl = configuredApiBaseUrl ?? (import.meta.env.DEV ? "http://localhost:8000" : undefined);
@@ -39,4 +39,19 @@ export async function fetchPublicBenchmarkEvents(runId: string): Promise<Runtime
   }
   const payload = await response.json() as { events: RuntimeEvent[] };
   return payload.events;
+}
+
+/** Read-only display of briefs that already passed server-side policy validation. */
+export async function fetchPublicPlannerBriefs(runId: string): Promise<PublicPlannerBrief[]> {
+  if (!apiBaseUrl) {
+    throw new Error("No RetailOps runtime API is configured for this deployment");
+  }
+  const response = await fetch(
+    `${apiBaseUrl}/v1/public-benchmark-runs/${encodeURIComponent(runId)}/planner-briefs`,
+  );
+  if (!response.ok) {
+    throw new Error(`Planner brief API returned ${response.status}`);
+  }
+  const payload = await response.json() as { briefs: PublicPlannerBrief[] };
+  return payload.briefs;
 }

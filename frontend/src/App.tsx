@@ -3,11 +3,18 @@ import { useEffect, useMemo, useState } from "react";
 import {
   fetchPublicBenchmarkEvents,
   fetchPublicBenchmarkRuns,
+  fetchPublicPlannerBriefs,
   fetchSystemBlueprint,
   hasBlueprintApi,
 } from "./api";
 import { fallbackBlueprint } from "./blueprint";
-import type { BlueprintState, PublicBenchmarkRun, RuntimeEvent, SystemBlueprint } from "./types";
+import type {
+  BlueprintState,
+  PublicBenchmarkRun,
+  PublicPlannerBrief,
+  RuntimeEvent,
+  SystemBlueprint,
+} from "./types";
 
 const operatingSignals = [
   { label: "Execution mode", value: "Local public runtime", detail: "Only persisted API runs and worker events are rendered; no hidden workload is represented as live." },
@@ -32,6 +39,7 @@ export default function App() {
   );
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
   const [events, setEvents] = useState<RuntimeEvent[]>([]);
+  const [plannerBriefs, setPlannerBriefs] = useState<PublicPlannerBrief[]>([]);
 
   useEffect(() => {
     if (!hasBlueprintApi) {
@@ -85,6 +93,7 @@ export default function App() {
   useEffect(() => {
     if (!selectedRunId || !hasBlueprintApi) {
       setEvents([]);
+      setPlannerBriefs([]);
       return;
     }
     let isCurrent = true;
@@ -97,6 +106,17 @@ export default function App() {
       .catch(() => {
         if (isCurrent) {
           setEvents([]);
+        }
+      });
+    fetchPublicPlannerBriefs(selectedRunId)
+      .then((nextBriefs) => {
+        if (isCurrent) {
+          setPlannerBriefs(nextBriefs);
+        }
+      })
+      .catch(() => {
+        if (isCurrent) {
+          setPlannerBriefs([]);
         }
       });
     return () => {
@@ -231,6 +251,37 @@ export default function App() {
                       </li>
                     ))}
                   </ol>
+                  <section className="planner-briefs" aria-labelledby="planner-brief-heading">
+                    <div className="detail-topline">
+                      <span className="micro-label" id="planner-brief-heading">CRITIC-APPROVED PLANNER BRIEFS</span>
+                      <span>{plannerBriefs.length} persisted</span>
+                    </div>
+                    {plannerBriefs.length === 0 ? (
+                      <p className="planner-brief-empty">
+                        No planner brief is available. A completed public run must be processed by the server-only Copilot command; rejected or unavailable responses are never displayed here.
+                      </p>
+                    ) : plannerBriefs.map((brief) => (
+                      <article className="planner-brief" key={brief.planner_brief_id}>
+                        <div className="planner-brief-heading">
+                          <div><span className="micro-label">PUBLIC BENCHMARK ONLY</span><h3>{brief.headline}</h3></div>
+                          <em className="state state-report_ready">{displayState(brief.status as BlueprintState)}</em>
+                        </div>
+                        <p>{brief.analysis_summary}</p>
+                        <ul className="planner-findings">
+                          {brief.forecast_findings.map((finding) => (
+                            <li key={`${brief.planner_brief_id}-${finding.statement}`}>
+                              <span>{finding.statement}</span><small>{finding.evidence_refs.join(" · ")}</small>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="planner-brief-verification">
+                          <strong>Human verification required</strong>
+                          <ul>{brief.planner_verification_steps.map((step) => <li key={step}>{step}</li>)}</ul>
+                        </div>
+                        <small>Limitations: {brief.limitations.join(" · ")}</small>
+                      </article>
+                    ))}
+                  </section>
                 </>
               ) : <p>No persisted run is selected.</p>}
             </aside>

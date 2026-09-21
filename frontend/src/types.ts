@@ -50,6 +50,30 @@ export interface RuntimeEvent {
   evidence_refs: string[];
 }
 
+export interface PlannerBriefFinding {
+  statement: string;
+  evidence_refs: string[];
+}
+
+/** Persisted only after the deterministic Planner Brief Policy accepts it. */
+export interface PublicPlannerBrief {
+  planner_brief_schema_version: string;
+  planner_brief_id: string;
+  run_id: string;
+  source_mode: "PUBLIC_BENCHMARK";
+  status: "PASS" | "PASS_WITH_LIMITATIONS";
+  headline: string;
+  analysis_summary: string;
+  forecast_findings: PlannerBriefFinding[];
+  evidence_references: string[];
+  limitations: string[];
+  planner_verification_steps: string[];
+  human_decision_required: boolean;
+  prohibited_operations: string[];
+  prompt_version: string;
+  model_version: string;
+}
+
 export interface PublicBenchmarkRun {
   run_id: string;
   source_mode: "PUBLIC_BENCHMARK";

@@ -80,6 +80,18 @@ user environment variables, and never prints either secret. Restart the API
 afterward. It deliberately requires a model argument: model selection is an
 owner decision, not something the script silently makes.
 
+After a public run reaches `REPORT_READY`, generate a brief from the same
+server terminal. The command accepts only the persisted run ID; it cannot
+accept a prompt, source path, credentials, or browser input:
+
+```powershell
+python -m app.copilot.cli --run-id '<completed-public-run-id>'
+```
+
+It prints a status, trace ID, and (only when critic-approved) the persisted
+brief ID. The UI reads approved briefs through its read-only API and cannot
+trigger a provider call or access the API key/operator token.
+
 The applicable prompt and policy are versioned in
 [planner_copilot_prompt.md](planner_copilot_prompt.md). Exact model choice and
 budget allocation remain owner decisions; available account credit alone is

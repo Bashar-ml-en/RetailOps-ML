@@ -150,7 +150,8 @@ in-memory object as a production interface.
 | P2 public lifecycle | Implemented locally | Explicit worker invokes the existing FreshRetailNet mapping, baseline, fixed candidate, and one locked-final-test report | Needs a server-configured local public parquet path and an explicitly started worker |
 | Runtime UI | Implemented | Browser renders only `/v1/public-benchmark-runs` and persisted event records | A static deployment shows no fallback run or analysis |
 | P3 evidence gateway | Implemented | Run-bound, read-only summary/forecast/limitation/case tools and fixture tests | Public reports only; no raw rows or customer scope |
-| P3 copilot safety | Implemented but disabled | Strict JSON schema, no-provider-storage request mode, tool/output caps, operator token, post-model critic, injection/uncited/action fixtures | No provider request without key, named model, retention acknowledgement, operator token, and cost caps |
+| P3 copilot safety | Implemented but disabled | Strict JSON schema, no-provider-storage request mode, tool/output caps, operator token, post-model critic, injection/uncited/action fixtures, and server-only CLI | No provider request without key, named model, retention acknowledgement, operator token, and cost caps |
+| P3 planner-brief display | Implemented | The browser reads only persisted, critic-approved brief artifacts; the server-only CLI initiates generation after `REPORT_READY` | UI cannot submit a prompt, invoke the provider, or read a credential/token |
 | P4 foundations | Partial | Idempotency, lease recovery, terminal outcomes, concise traces, and reservation ledger | Scheduler, production monitoring, actual usage reconciliation, and operator ownership require deployment decisions |
 
 ### P0 — Product and autonomy charter

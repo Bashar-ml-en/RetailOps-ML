@@ -95,6 +95,7 @@ The API's current inspectable routes are:
 - `POST /v1/public-benchmark-runs` (public benchmark selection only)
 - `GET /v1/public-benchmark-runs` and `GET /v1/public-benchmark-runs/{run_id}`
 - `GET /v1/public-benchmark-runs/{run_id}/events`
+- `GET /v1/public-benchmark-runs/{run_id}/planner-briefs` (persisted, critic-approved public briefs only)
 - `POST /v1/public-benchmark-runs/{run_id}/planner-briefs` (hard-disabled until all OpenAI safety gates are configured)
 
 ## Reuse responsibly
