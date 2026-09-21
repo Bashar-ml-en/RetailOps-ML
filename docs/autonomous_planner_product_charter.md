@@ -1,7 +1,7 @@
 # RetailOps Autonomous Planner Copilot — Product and Autonomy Charter
 
 **Version:** autonomous-planner-charter-v1
-**Status:** APPROVED_FOR_PUBLIC_BENCHMARK_DEVELOPMENT
+**Status:** APPROVED_FOR_PUBLIC_BENCHMARK_DEVELOPMENT; P1/P2 LOCAL RUNTIME VERIFIED
 **Decision owner:** Repository owner
 **Authority lane:** PUBLIC_BENCHMARK and AUTHORISATION_READINESS only
 
@@ -103,9 +103,8 @@ planner question and call only read-only, server-side evidence functions:
 ~~~text
 get_run_summary
 get_forecast_evidence
-get_model_selection_evidence
 get_limitations
-create_planner_brief_draft
+get_qualified_cases
 ~~~
 
 The Copilot cannot access a connector, arbitrary database query, browser,
@@ -159,20 +158,23 @@ reviewer outcomes. No target business improvement is declared yet.
 
 | Decision | Current state | Blocks |
 | --- | --- | --- |
-| OpenAI model identifier | UNKNOWN — choose after P3 evaluation corpus exists | P3 API activation only |
-| Exact per-run/monthly API spend caps | UNKNOWN — the owner reported approximately USD 50 in available credits | P3 API activation only |
-| API data-retention configuration | UNKNOWN — decide before any non-public data could be sent | P3 activation beyond public benchmark |
+| OpenAI model identifier | UNKNOWN — adapter refuses to run until `RETAILOPS_OPENAI_MODEL` is explicitly configured; it does not choose one | P3 API activation only |
+| Exact per-run/monthly API spend caps | UNKNOWN — the owner reported approximately USD 50 in available credits, not an allocation; adapter refuses while either cap is zero | P3 API activation only |
+| API data-retention configuration | UNKNOWN — the public implementation sends `store: false` only after an explicit server-side acknowledgement | P3 activation beyond public benchmark |
+| Local copilot operator token | UNKNOWN — required to protect the spend-capable endpoint; not a substitute for authenticated pilot RBAC | P3 local API activation only |
 | Production cloud, identity provider, queue, database, and object store | UNKNOWN — require an explicit P1 architecture decision | P1 production-equivalent runtime implementation |
 | Authorised retailer and pilot scope | UNKNOWN | P5 pilot activation only |
 
 No API key, credentials, customer data, or retailer identity is required or
 permitted for P0.
 
-## P0 exit decision
+## Current exit decision
 
-**Result:** PROCEED to P1 architecture decision work.
+**Result:** P1/P2 local public-runtime gate passes its implementation tests. P3
+contract and failure-closed fixtures are implemented but provider activation is
+not approved by the missing configuration decisions above.
 
-The next bounded work item is P1-architecture-decision-record-v1: select the
-local runtime approach and durable interfaces for API, audit/event store,
-artifact store, queue/worker, scheduler, and authenticated-role boundary. It
-must make no deployment or provider decision without explicit owner approval.
+The next bounded work item is P4 deployment operations: choose a schedule,
+operator ownership, monitoring/alert thresholds, source retention controls,
+and production provider foundations. P5 remains blocked on the authorised
+pilot charter and a named retailer scope.

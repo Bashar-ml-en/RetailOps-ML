@@ -67,9 +67,9 @@ python -m uvicorn app.main:app --app-dir backend --reload --port 8000
 pnpm --dir frontend dev
 ```
 
-Open `http://localhost:5173`. The local UI can render its explicitly labelled
-blueprint without connecting to an API. For a local API, use
-`http://localhost:8000`.
+Open `http://localhost:5173`. With a local API at `http://localhost:8000`, the
+UI renders only persisted public-run events. Without an API it still shows the
+architecture contract, but deliberately shows no fallback analysis or run.
 
 On macOS or Linux, use `./scripts/verify.sh`. Override the Python executable
 with `PYTHON_BIN=/path/to/python ./scripts/verify.sh` when needed.
@@ -92,6 +92,10 @@ The API's current inspectable routes are:
 - `GET /system/blueprint`
 - `POST /v1/connector-runs/csv` (hard-disabled without an authorised runtime)
 - `GET /v1/runs/{run_id}`
+- `POST /v1/public-benchmark-runs` (public benchmark selection only)
+- `GET /v1/public-benchmark-runs` and `GET /v1/public-benchmark-runs/{run_id}`
+- `GET /v1/public-benchmark-runs/{run_id}/events`
+- `POST /v1/public-benchmark-runs/{run_id}/planner-briefs` (hard-disabled until all OpenAI safety gates are configured)
 
 ## Reuse responsibly
 
@@ -114,6 +118,9 @@ The API's current inspectable routes are:
 - [Specialist agent contracts](docs/agent_prompts.md)
 - [Autonomous Planner Copilot product charter](docs/autonomous_planner_product_charter.md)
 - [Autonomous Planner Copilot execution roadmap](docs/autonomous_agent_execution_roadmap.md)
+- [Local public-benchmark runtime](docs/local_public_runtime.md) and
+  [runtime architecture decision](docs/adr/0001-local-public-benchmark-runtime.md)
+- [Planner Copilot prompt and safety contract](docs/planner_copilot_prompt.md)
 - [Architecture](docs/architecture.md) and [system blueprint](docs/system_blueprint.md)
 - [FreshRetailNet benchmark contract](docs/freshretailnet_benchmark_contract.md)
   and [locked final-test report](docs/freshretailnet_final_test_report.md)

@@ -4,6 +4,7 @@ data/raw/*
 data/snapshots/
 data/artifacts/
 data/audit/
+data/runtime/
 
 # Python
 __pycache__/

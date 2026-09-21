@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { fetchSystemBlueprint, hasBlueprintApi } from "./api";
+import {
+  fetchPublicBenchmarkEvents,
+  fetchPublicBenchmarkRuns,
+  fetchSystemBlueprint,
+  hasBlueprintApi,
+} from "./api";
 import { fallbackBlueprint } from "./blueprint";
-import type { BlueprintState, SystemBlueprint } from "./types";
+import type { BlueprintState, PublicBenchmarkRun, RuntimeEvent, SystemBlueprint } from "./types";
 
 const operatingSignals = [
-  { label: "Execution mode", value: "Blueprint only", detail: "No hidden workload is being represented as live." },
+  { label: "Execution mode", value: "Local public runtime", detail: "Only persisted API runs and worker events are rendered; no hidden workload is represented as live." },
   { label: "Evidence rule", value: "Versioned scope", detail: "Every specialist receives the same declared evidence bundle." },
   { label: "Decision authority", value: "Human planner", detail: "No purchase, transfer, price, or supplier action is automated." },
   { label: "Failure posture", value: "Inconclusive", detail: "Weak coverage or proof stops a case instead of inventing certainty." },
@@ -21,6 +26,12 @@ export default function App() {
     hasBlueprintApi ? "Connecting to blueprint API" : "Embedded architecture blueprint",
   );
   const [selectedStageId, setSelectedStageId] = useState(fallbackBlueprint.stages[0].id);
+  const [runs, setRuns] = useState<PublicBenchmarkRun[]>([]);
+  const [runtimeState, setRuntimeState] = useState(
+    hasBlueprintApi ? "Loading persisted runtime events" : "Runtime API is not configured",
+  );
+  const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
+  const [events, setEvents] = useState<RuntimeEvent[]>([]);
 
   useEffect(() => {
     if (!hasBlueprintApi) {
@@ -46,6 +57,53 @@ export default function App() {
     };
   }, []);
 
+  const refreshRuns = () => {
+    if (!hasBlueprintApi) {
+      return;
+    }
+    setRuntimeState("Loading persisted runtime events");
+    fetchPublicBenchmarkRuns()
+      .then((nextRuns) => {
+        setRuns(nextRuns);
+        setSelectedRunId((current) => current && nextRuns.some((run) => run.run_id === current)
+          ? current
+          : (nextRuns[0]?.run_id ?? null));
+        setRuntimeState(nextRuns.length ? "Persisted runtime API connected" : "No persisted benchmark runs yet");
+      })
+      .catch(() => setRuntimeState("Runtime API is unavailable — no run state is shown"));
+  };
+
+  useEffect(() => {
+    refreshRuns();
+    if (!hasBlueprintApi) {
+      return undefined;
+    }
+    const refreshTimer = window.setInterval(refreshRuns, 15_000);
+    return () => window.clearInterval(refreshTimer);
+  }, []);
+
+  useEffect(() => {
+    if (!selectedRunId || !hasBlueprintApi) {
+      setEvents([]);
+      return;
+    }
+    let isCurrent = true;
+    fetchPublicBenchmarkEvents(selectedRunId)
+      .then((nextEvents) => {
+        if (isCurrent) {
+          setEvents(nextEvents);
+        }
+      })
+      .catch(() => {
+        if (isCurrent) {
+          setEvents([]);
+        }
+      });
+    return () => {
+      isCurrent = false;
+    };
+  }, [selectedRunId, runs]);
+
   const selectedStage = useMemo(
     () => blueprint.stages.find((stage) => stage.id === selectedStageId) ?? blueprint.stages[0],
     [blueprint.stages, selectedStageId],
@@ -68,6 +126,7 @@ export default function App() {
         </a>
         <nav className="topnav" aria-label="Control room sections">
           <a href="#architecture">Architecture</a>
+          <a href="#runtime">Runtime</a>
           <a href="#agents">Agents</a>
           <a href="#lifecycle">Lifecycle</a>
           <a href="#controls">Gates</a>
@@ -96,7 +155,7 @@ export default function App() {
 
         <aside className="system-card" aria-label="Current system truth">
           <div className="system-card-head">
-            <div><span className="micro-label">SYSTEM TRUTH</span><strong>RetailOps / local connector gate</strong></div>
+            <div><span className="micro-label">SYSTEM TRUTH</span><strong>RetailOps / local public runtime</strong></div>
             <span className="truth-pill">NO LIVE JOBS</span>
           </div>
           <div className="signal-field" aria-hidden="true">
@@ -108,7 +167,7 @@ export default function App() {
           </div>
           <dl className="system-facts">
             <div><dt>Live workloads</dt><dd>{blueprint.live_workloads === "NONE" ? "None" : blueprint.live_workloads}</dd></div>
-            <div><dt>Release posture</dt><dd>Architecture explorer</dd></div>
+            <div><dt>Release posture</dt><dd>Explicit worker required</dd></div>
             <div><dt>Final authority</dt><dd>Retail planner</dd></div>
           </dl>
           <p className="system-caption">The interface is an inspectable operating contract, not a simulated production run.</p>
@@ -124,6 +183,59 @@ export default function App() {
             <small>{signal.detail}</small>
           </article>
         ))}
+      </section>
+
+      <section className="runtime-section" id="runtime" aria-labelledby="runtime-heading">
+        <div className="section-heading">
+          <div><p className="eyebrow">Persisted execution</p><h2 id="runtime-heading">Real public runs, never simulated timelines.</h2></div>
+          <div className="runtime-heading-actions">
+            <p>{runtimeState}</p>
+            <button className="quiet-button" onClick={refreshRuns} type="button" disabled={!hasBlueprintApi}>Refresh</button>
+          </div>
+        </div>
+        {!hasBlueprintApi ? (
+          <div className="runtime-empty">
+            This static deployment has no backend runtime. Configure <code>VITE_API_URL</code> to inspect persisted runs; no fallback result is displayed.
+          </div>
+        ) : runs.length === 0 ? (
+          <div className="runtime-empty">
+            No public benchmark run has been persisted. The server queues an explicit selection and a separate worker processes it from a server-configured public source.
+          </div>
+        ) : (
+          <div className="runtime-shell">
+            <div className="run-list" aria-label="Persisted public benchmark runs">
+              {runs.map((run) => (
+                <button
+                  className={`run-card ${run.run_id === selectedRunId ? "is-selected" : ""}`}
+                  key={run.run_id}
+                  onClick={() => setSelectedRunId(run.run_id)}
+                  type="button"
+                >
+                  <span className="micro-label">PUBLIC BENCHMARK</span>
+                  <strong>{run.selection_id}</strong>
+                  <em className={`state state-${run.status.toLowerCase()}`}>{displayState(run.status as BlueprintState)}</em>
+                  <small>{new Date(run.updated_at).toLocaleString()}</small>
+                </button>
+              ))}
+            </div>
+            <aside className="runtime-detail" aria-live="polite">
+              {selectedRunId ? (
+                <>
+                  <div className="detail-topline"><span className="micro-label">IMMUTABLE EVENT TRAIL</span><span>{events.length} events</span></div>
+                  <ol className="runtime-events">
+                    {events.map((event) => (
+                      <li key={`${event.sequence}-${event.name}`}>
+                        <div><strong>{event.name}</strong><time>{new Date(event.occurred_at).toLocaleString()}</time></div>
+                        <p>{event.detail}</p>
+                        {event.evidence_refs.length > 0 && <small>{event.evidence_refs.join(" · ")}</small>}
+                      </li>
+                    ))}
+                  </ol>
+                </>
+              ) : <p>No persisted run is selected.</p>}
+            </aside>
+          </div>
+        )}
       </section>
 
       <section className="maturity-section" aria-label="Current delivery maturity">

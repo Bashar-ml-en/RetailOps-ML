@@ -13,7 +13,7 @@ def build_system_blueprint() -> dict[str, Any]:
     """Return the versioned system blueprint used by the architecture explorer."""
 
     return {
-        "blueprint_version": "2026.09.p0_sqlite_fixture_audit",
+        "blueprint_version": "2026.09.p2_public_runtime_contract",
         "mode": "ARCHITECTURE_BLUEPRINT",
         "live_workloads": "NONE",
         "truthful_status": {
@@ -32,14 +32,18 @@ def build_system_blueprint() -> dict[str, Any]:
                 "deterministic Stage 5 Inventory Risk, Impact Ranking, Policy Critic, and Action Drafting contracts with fixture-only success and failure paths",
                 "synchronous fixture-only workflow that persists actual specialist, terminal, and review-ready events",
                 "fixture-only persisted reviewer queue with append-only approve, decline, and defer audit events",
+                "P1/P2 local public-benchmark runtime with SQLite idempotency, immutable event trail, worker leases, and a separate explicit worker command",
+                "P3 OpenAI Responses adapter contract with read-only public evidence tools, strict structured output, deterministic post-model critique, and fail-closed credential/model/retention/budget gates",
             ],
             "not_running_yet": [
                 "authorised retailer source and server configuration",
+                "configured local FreshRetailNet source and an explicitly started worker process",
                 "feature jobs",
                 "authorised baseline or candidate-model evaluation",
                 "asynchronous or parallel specialist worker",
                 "authenticated reviewer queue and human identity controls",
                 "production model registry, deployment, and drift monitoring",
+                "an enabled OpenAI provider call with a named model, server-side secret, retention decision, and owner-selected cost caps",
             ],
         },
         "stages": [
@@ -177,6 +181,8 @@ def build_system_blueprint() -> dict[str, Any]:
             "Use deterministic Stage 5 specialist contracts in a synchronous fixture-only event workflow; fail closed on missing inventory, inbound, lead-time, identity, or policy evidence, and keep an authenticated workflow required.",
             "Persist only actual fixture workflow transitions with evidence references; terminal outcomes create no review case and no event permits external execution.",
             "Persist fixture-only reviewer queue decisions as immutable approve, decline, or defer events; approval never invokes an external action.",
+            "Queue a public benchmark selection behind a SQLite idempotency key; a separate local worker records durable events from source validation through a locked-final-test report, or an explicit terminal outcome.",
+            "Allow an optional OpenAI copilot only to explain persisted public evidence through read-only tools and strict structured output; post-model policy critique rejects uncited or operational language.",
             "Require an authorised evaluation and human-reviewed release before any production champion is deployed.",
             "Monitor realised error, coverage, schema/feature drift, freshness, and reviewer outcomes.",
             "Propose retraining or rollback through an auditable human-reviewed change request.",
@@ -186,6 +192,16 @@ def build_system_blueprint() -> dict[str, Any]:
                 "title": "Public benchmark boundary",
                 "detail": "FreshRetailNet benchmark snapshots preserve public-source provenance and can support only limited forecast evaluation, never customer claims or inventory/replenishment decisions.",
                 "state": "ENFORCED_BY_POLICY",
+            },
+            {
+                "title": "Durable public runtime",
+                "detail": "Local SQLite records public-run idempotency, worker leases, concise immutable events, and terminal outcomes; the browser renders only those persisted records. A configured source and explicit worker are still required to execute a run.",
+                "state": "IMPLEMENTED",
+            },
+            {
+                "title": "OpenAI copilot gate",
+                "detail": "The Responses adapter is disabled until a server-side key, named model, explicit no-provider-storage decision, and per-run/monthly caps are configured. It can call only read-only public evidence tools and is post-validated by deterministic policy.",
+                "state": "CONTRACT_DEFINED",
             },
             {
                 "title": "Pilot access readiness",

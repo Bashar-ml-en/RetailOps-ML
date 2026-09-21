@@ -15,9 +15,9 @@ def test_product_brief_states_human_approval_boundary() -> None:
 
     assert response.status_code == 200
     payload = response.json()
-    assert payload["status"] == "local_lifecycle_gates"
+    assert payload["status"] == "local_public_benchmark_runtime"
     assert "autonomous purchasing" in payload["non_goals"]
-    assert len(payload["how"]) == 8
+    assert len(payload["how"]) == 10
 
 
 def test_csv_connector_endpoint_is_disabled_without_authorised_server_configuration() -> None:

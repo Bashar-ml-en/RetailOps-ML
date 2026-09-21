@@ -41,3 +41,32 @@ export interface SystemBlueprint {
   lifecycle: string[];
   controls: BlueprintControl[];
 }
+
+export interface RuntimeEvent {
+  sequence: number;
+  name: string;
+  occurred_at: string;
+  detail: string;
+  evidence_refs: string[];
+}
+
+export interface PublicBenchmarkRun {
+  run_id: string;
+  source_mode: "PUBLIC_BENCHMARK";
+  data_classification: "PUBLIC_BENCHMARK";
+  status: string;
+  selection_id: string;
+  created_at: string;
+  updated_at: string;
+  attempt_count: number;
+  outcome: {
+    status?: string;
+    selection?: string;
+    selected_model_version?: string;
+    metrics?: Record<string, number>;
+    limitations?: string[];
+    next_action?: string;
+  } | null;
+  limitations: string[];
+  prohibited_operations: string[];
+}

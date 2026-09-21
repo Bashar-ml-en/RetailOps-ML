@@ -16,3 +16,18 @@
 .state-planned {
   color: #f0b57d;
 }
+
+.state-queued,
+.state-running {
+  color: #8eaeff;
+}
+
+.state-report_ready {
+  color: #79dbbc;
+}
+
+.state-inconclusive,
+.state-rejected,
+.state-failed {
+  color: #f0b57d;
+}

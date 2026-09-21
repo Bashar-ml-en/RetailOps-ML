@@ -22,9 +22,9 @@ def product_brief() -> dict[str, object]:
 
     return {
         "product": settings.app_name,
-        "status": "local_lifecycle_gates",
+        "status": "local_public_benchmark_runtime",
         "why": "Help retail planners prioritise demand and inventory decisions from authorised operational data.",
-        "what": "Implemented local pilot-readiness, P0 provisioning-foundation contracts with a SQLite fixture audit migration, FreshRetailNet public-benchmark, baseline/model lifecycle, one labelled final-test report, deterministic review-case contracts, and a persisted fixture-only reviewer queue; an authorised pilot and authenticated workflow remain absent.",
+        "what": "Implemented local pilot-readiness, P0 provisioning-foundation contracts, a durable public-only FreshRetailNet run queue/worker/event API, baseline/model lifecycle, labelled final-test reporting, deterministic review contracts, and an optional fail-closed OpenAI explanation adapter. An authorised pilot and authenticated workflow remain absent.",
         "how": [
             "Record non-secret pilot scope and source-boundary evidence; block customer-data ingestion until authenticated tenant controls exist.",
             "Map only an explicit FreshRetailNet public-benchmark subset into an immutable, licence-attributed snapshot; block inventory, replenishment, production, and retailer claims.",
@@ -34,6 +34,8 @@ def product_brief() -> dict[str, object]:
             "Compare the single predeclared candidate with the baseline on validation only; retain the baseline on any tie or regression and record a local rollback reference.",
             "Evaluate the validation-selected public benchmark model once on the locked final test in a separate immutable report; never change selection from the result.",
             "Use deterministic specialist contracts in a synchronous fixture-only event workflow that returns INCONCLUSIVE for missing inventory, inbound, lead-time, identity, or policy evidence; the local queue records approve, decline, or defer audit events without external execution.",
+            "Queue a bounded FreshRetailNet public selection with an idempotency key; a separate local worker records immutable events and either a locked-final-test report or an explicit terminal failure.",
+            "Permit an optional OpenAI Planner Copilot only after server-side secret, named-model, retention, and budget gates pass; it reads compact persisted evidence and deterministic policy validates every brief.",
         ],
         "impact_measurement": [
             "forecast error against a declared baseline",

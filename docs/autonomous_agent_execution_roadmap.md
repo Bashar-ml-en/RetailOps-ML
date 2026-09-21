@@ -1,9 +1,13 @@
 # RetailOps Autonomous Planner Copilot — Execution Roadmap and Prompt Pack
 
-**Status:** P0 product/autonomy charter approved for public-benchmark
-development. This document does not activate a connector, worker, model,
-customer-data path, or operational action. See the
-[approved product charter](autonomous_planner_product_charter.md).
+**Status:** P0 is approved; P1/P2 local public-benchmark runtime is implemented
+and verified. P3's bounded OpenAI adapter, tool schemas, structured-output
+contract, policy gate, and failure fixtures are implemented but hard-disabled
+until explicit server-side configuration is supplied. This does not activate a
+retailer connector, production worker/schedule, customer-data path, model
+provider request, or operational action. See the
+[approved product charter](autonomous_planner_product_charter.md) and
+[runtime ADR](adr/0001-local-public-benchmark-runtime.md).
 
 ## Product decision
 
@@ -137,6 +141,17 @@ in-memory object as a production interface.
 | P3 | Add the bounded OpenAI Planner Copilot | Tool gateway, response schema/prompt, agent evals, planner brief UI | The copilot produces only schema-valid, evidence-cited public reports; adversarial tests prove it cannot invoke forbidden tools or invent an action. |
 | P4 | Make automation observable, repeatable, and cost-controlled | Scheduler/retries, monitoring, cost ledger, release controls | Repeated runs are idempotent, budget-limited, traced, observable, and safe under failure/retry conditions. |
 | P5 | Activate one authorised pilot | Only explicitly authorised source mapping and deployment work | Pilot charter, production controls, source acceptance, human review, and declared measurement protocol all pass. |
+
+## Current implementation evidence
+
+| Capability | State | Evidence | Deliberate limit |
+| --- | --- | --- | --- |
+| P1 durable contract | Implemented locally | SQLite idempotency key, worker lease, immutable event stream, restart test | Local adapter only; no tenant identity or production queue |
+| P2 public lifecycle | Implemented locally | Explicit worker invokes the existing FreshRetailNet mapping, baseline, fixed candidate, and one locked-final-test report | Needs a server-configured local public parquet path and an explicitly started worker |
+| Runtime UI | Implemented | Browser renders only `/v1/public-benchmark-runs` and persisted event records | A static deployment shows no fallback run or analysis |
+| P3 evidence gateway | Implemented | Run-bound, read-only summary/forecast/limitation/case tools and fixture tests | Public reports only; no raw rows or customer scope |
+| P3 copilot safety | Implemented but disabled | Strict JSON schema, no-provider-storage request mode, tool/output caps, operator token, post-model critic, injection/uncited/action fixtures | No provider request without key, named model, retention acknowledgement, operator token, and cost caps |
+| P4 foundations | Partial | Idempotency, lease recovery, terminal outcomes, concise traces, and reservation ledger | Scheduler, production monitoring, actual usage reconciliation, and operator ownership require deployment decisions |
 
 ### P0 — Product and autonomy charter
 

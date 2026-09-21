@@ -19,8 +19,9 @@ Before a release or pilot, verify:
 ## Current local assessment
 
 This assessment covers only the implemented local connector, public benchmark,
-baseline/fixed-candidate lifecycle, one immutable final-test report, Stage 5
-specialist contracts, synchronous fixture-only workflow and reviewer queue,
+durable public runtime, baseline/fixed-candidate lifecycle, one immutable
+final-test report, bounded OpenAI copilot contract, Stage 5 specialist
+contracts, synchronous fixture-only workflow and reviewer queue,
 pilot-readiness preparation, and P0 foundation-contract preparation. It is not
 a production or pilot approval.
 
@@ -34,6 +35,8 @@ a production or pilot approval.
 | Fixed-candidate lifecycle | PASS for fixture behavior | Tests prove a predeclared candidate is compared only against the matching accepted baseline/snapshot, strictly promotes only on validation improvement, retains the baseline on a tie, records configuration/metrics/selection/rollback in a non-overwriting local registry artifact, and does not let locked final-test values affect validation metrics. |
 | Public benchmark boundary | PASS for local adapter behavior | FreshRetailNet tests require an explicit 20–50 store-product selection across one to three stores, validate schema/continuous daily coverage, preserve zero sales, persist immutable public provenance, and attach limitations that block inventory, replenishment, production scoring, and customer claims. No source data is bundled or automatically downloaded. |
 | Public final-test report | PASS_WITH_LIMITATIONS for the recorded public run | Immutable report `final-test-a4c2a81f-92f4-4e65-a3fa-289d033f796c` verifies table hashes, feature hash, scope splits, and registry chain before evaluating the validation-selected retained baseline once. It records macro MAE 0.6368571429 and RMSE 0.8062199696 for 20 seven-day scopes, retains public-data limitations, and cannot change selection. |
+| Durable public runtime | PASS for local adapter behavior | Tests prove idempotent API submission, a restart-readable SQLite event stream, separate worker claim, explicit missing-source `INCONCLUSIVE`, and an actual parquet fixture path through snapshot, baseline, model selection, locked final test, and `REPORT_READY`. No scheduler or production queue is active. |
+| Planner Copilot boundary | PASS for disabled-contract behavior | Read-only, run-bound evidence functions return compact summaries only. Tests reject invented citations, prompt-injection language, forbidden action language, malformed arguments, write-capable tools, skipped evidence tools, and absent configuration. No live provider call, model selection, or customer data path was tested. |
 | Stage 5 specialist contracts | PASS for fixture behavior | Inventory Risk, Impact Ranking, Policy Critic, and Action Drafting have typed deterministic fixtures. Missing inventory, lead time, inbound coverage, or eligible upstream evidence returns `INCONCLUSIVE`; public benchmark inputs cannot create an action path; external operations are rejected; fixture drafts are review-only and non-executable. |
 | Fixture specialist workflow | PASS for fixture behavior | A synchronous fixture-only orchestrator persists only named local transitions with evidence references. It creates a queue case only after a critic-approved draft; missing lead time ends `INCONCLUSIVE`, non-fixture input ends `REJECTED`, and no terminal path creates a review case. |
 | Fixture reviewer queue | PASS for fixture behavior | Critic-approved fixture drafts enter immutable local case storage. Planner-role decisions append `DEFER`, `APPROVE`, or `DECLINE` events; terminal decisions cannot be overwritten and approval has no external execution effect. Public and retailer classifications are rejected by this local queue. |
