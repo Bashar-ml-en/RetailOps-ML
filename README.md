@@ -121,6 +121,7 @@ The API's current inspectable routes are:
 - [Local public-benchmark runtime](docs/local_public_runtime.md) and
   [runtime architecture decision](docs/adr/0001-local-public-benchmark-runtime.md)
 - [Planner Copilot prompt and safety contract](docs/planner_copilot_prompt.md)
+- [Safe local Copilot configuration](docs/local_public_runtime.md#optional-openai-explanation-layer)
 - [Architecture](docs/architecture.md) and [system blueprint](docs/system_blueprint.md)
 - [FreshRetailNet benchmark contract](docs/freshretailnet_benchmark_contract.md)
   and [locked final-test report](docs/freshretailnet_final_test_report.md)

@@ -67,6 +67,19 @@ planner brief.
 The operator token constrains local public-runtime spend. It is not a tenant
 identity/RBAC implementation and does not make the service pilot-ready.
 
+To configure all of those values without placing a key in a repository file,
+run this interactive command after revoking the exposed key and creating a new
+one in the OpenAI dashboard:
+
+```powershell
+.\scripts\configure-local-copilot.ps1 -Model 'your-approved-model-id' -ApproveNoProviderStorage
+```
+
+The script hides key input, creates a local operator token, writes only Windows
+user environment variables, and never prints either secret. Restart the API
+afterward. It deliberately requires a model argument: model selection is an
+owner decision, not something the script silently makes.
+
 The applicable prompt and policy are versioned in
 [planner_copilot_prompt.md](planner_copilot_prompt.md). Exact model choice and
 budget allocation remain owner decisions; available account credit alone is
